@@ -63,6 +63,9 @@ class UserFormController extends Controller
         app()->setLocale($validated['locale']);
 
 
+        ray($cart)->label('Creata pagina form')->color('blue');
+
+
         /**
          * Valorizzo old input
          */

@@ -70,7 +70,7 @@ class PaymentController extends Controller
         $order = $paymentService->confirmPayment($order);
 
 
-        ray($order->toArray())->color('green')->label('Pagamento verificato');
+        ray($order)->color('blue')->label('Pagamento verificato');
 
 
         /**

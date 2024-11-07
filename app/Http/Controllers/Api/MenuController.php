@@ -165,7 +165,9 @@ class MenuController extends Controller
         /**
          * Aggiorna il carrello, prodotti e totale
          */
-        $cart->product_ids = array_filter($validated['quantity'], fn ($quantity) => !is_null($quantity) && $quantity > 0);
+        $validated['quantity'] = array_filter($validated['quantity'], fn ($quantity) => !is_null($quantity) && $quantity > 0);
+        $validated['quantity'] = array_map('intval', $validated['quantity']);
+        $cart->product_ids = $validated['quantity'];
 
         $total = 0;
         $products = Menu::whereIn('id', array_keys($cart->product_ids))->get();
@@ -175,6 +177,8 @@ class MenuController extends Controller
         $cart->total = $total;
         $cart->save();
 
+
+        ray($cart)->label('Carrello aggiornato')->color('blue');
 
 
         /**

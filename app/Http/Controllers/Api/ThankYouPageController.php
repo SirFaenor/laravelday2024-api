@@ -50,6 +50,9 @@ class ThankYouPageController extends Controller
             ], 400);
         }
 
+        ray($order)->label('Thank you page generata')->color('blue');
+
+
 
         return response()->json([
             'html' => view('cart.thank-you', [
