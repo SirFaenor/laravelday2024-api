@@ -1,0 +1,139 @@
+/**
+ * ================================================================
+ *
+ * Style base per responso html via api
+ *
+ * ================================================================
+ */
+
+
+/**
+ * Tailwindcss 
+ */
+@tailwind components;
+@tailwind utilities;
+@tailwind base;
+
+
+
+/**
+ * Css custom, possiamo:
+ * - utilizzare le variabile del sito principale (es. --color-blue)
+ * - utilizzare le classi di tailwindcss con la direttiva @apply
+ */
+.api-response {
+
+    // sfrutto font del sito principale,
+    font-family: "Cera Pro","Arial","Helvetica",sans-serif;
+
+    th {
+        @apply font-500;
+    }
+
+    .text-stroke {
+        -webkit-text-fill-color: rgba(127, 127, 127, 0);
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: rgba(0, 0, 0, 0.3);
+    }
+
+
+    .cart {
+
+        .order-steps {
+            padding-top: 4rem;
+            margin: 0 auto;
+            position: relative;
+            @apply md:pb-4;
+
+        }
+            
+            .order-steps li {
+                width: 100%;
+                position: relative;
+                z-index: 2;
+                text-align: center;
+            }
+    
+            .order-steps li + li {margin-top: 1em;}
+    
+                .order-steps li:before {
+                    content: '';
+                    width: 12px;
+                    height: 12px;
+                    border: 2px solid black;
+                    border-radius: 50%;
+                    background-color: rgba(255,255,255,0);
+                    transition: all .5s;
+                    display: block;
+                    margin: 0 auto;
+                } 
+                    .order-steps li.active:before {
+                        border-color: var(--color-blue);
+                        transform: scale(1.5);
+                        background-color: var(--color-blue);
+                    }
+                    .order-steps li.completed:before { background-color: black; }
+    
+    
+            .order-steps li:not(:last-child):after{
+                width: 1px;
+                height: 2em;
+                display: block;
+                margin: 1em auto 0;
+                background: #BABABA;
+                content: '';
+            }
+    
+                .order-steps li span {
+                    margin-bottom: 12px;
+                    display: inline-block;
+                    font-weight: 500;
+                    opacity: 0;
+                    transition: opacity .5s;
+                }
+                    .order-steps li:not(.active) span { opacity: 0.1;}
+                    .order-steps li.active span { 
+                        margin-top: 12px;
+                        margin-bottom: 0;
+                        bottom: auto;
+                        top: 100%;
+                        opacity: 1;                     
+                        color: var(--color-blue);
+                    }
+    
+            @media only screen and (min-width: 768px){       
+                .order-steps {
+                    display: flex;
+                    max-width: 700px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    justify-content: space-between;
+                }
+    
+                .order-steps li + li {margin-top: 0;}
+    
+                .order-steps li:not(.active) span {display: none;}
+    
+                .order-steps li:not(.last-child)::after {
+                    position: absolute;
+                    left: calc(50% + 19px);
+                    top: 7px;
+                    margin: 0;
+                    right: -98px;
+                    height: 1px;
+                    width: auto;
+                }
+    
+                .order-steps li span {
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    white-space: nowrap;
+                }
+    
+            }
+    }
+
+}
+

@@ -1,0 +1,7 @@
+Sitemap: https://www.xxxxxxx.xxx/sitemap.xml
+User-agent: *
+Disallow: /tests/
+Disallow: /development/
+Disallow: /area_amministrazione/
+Disallow: /file_download/
+Disallow: /app_logs/

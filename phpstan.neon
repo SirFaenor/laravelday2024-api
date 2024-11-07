@@ -1,0 +1,19 @@
+includes:
+
+    - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - app
+
+    level: 6
+
+    ignoreErrors:
+        - '#^Call to method .+ on an unknown class Spatie\\.+\\Ray.$#'
+
+    # https://phpstan.org/config-reference#universal-object-crates
+    universalObjectCratesClasses:
+        - Illuminate\Http\Resources\Json\JsonResource
+rules:
+    # - Spatie\Ray\PHPStan\RemainingRayCallRule

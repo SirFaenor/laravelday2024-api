@@ -1,0 +1,78 @@
+#
+# 'docker compose up'
+#
+
+services:
+  web:
+    container_name: ${COMPOSE_PROJECT_NAME}_web
+    build:
+      context: .
+      dockerfile: docker-php.dockerfile
+      args:
+        - APACHE_RUN_USER=${COMPOSE_APACHE_RUN_USER}
+        - APACHE_RUN_GROUP=${COMPOSE_APACHE_RUN_GROUP}
+    entrypoint: ["/bin/sh","-c"]
+    command: 
+      - |
+        composer install
+        php artisan migrate
+        apache2-foreground
+    restart: "no"
+    volumes:
+      - ".:/var/www/html"
+      - "./docker-data/log:/var/log/apache2"
+      - "./docker-data/php/php.ini:/usr/local/etc/php/conf.d/custom.ini"
+    ports:
+      - ${COMPOSE_WEB_PORT}
+    hostname: ${COMPOSE_PROJECT_NAME}.localhost
+    user : ${COMPOSE_APACHE_RUN_USER}
+    environment:
+      - 'COMPOSER_AUTH={"github-oauth": {"github.com": "${GH_AUTH_TOKEN:-}"}}'
+    labels:
+      - ${COMPOSE_LABELS:-}
+  db:
+    container_name: ${COMPOSE_PROJECT_NAME}_db
+    image: mysql:8
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE : ${DB_DATABASE}
+      MYSQL_USER : ${DB_USERNAME}
+      MYSQL_PASSWORD : ${DB_PASSWORD}
+    volumes:
+      - ./docker-data/mysql:/var/lib/mysql
+    ports:
+      - ${COMPOSE_MYSQL_PORT} 
+  phpmyadmin:
+    container_name: ${COMPOSE_PROJECT_NAME}_pma
+    image: phpmyadmin/phpmyadmin:5
+    restart: "no"
+    environment:
+      PMA_HOST: ${COMPOSE_PROJECT_NAME}_db
+      PMA_USER: root
+      PMA_PASSWORD: secret
+      UPLOAD_LIMIT : 200000000
+    ports:
+      - ${COMPOSE_PHPMYADMIN_PORT}
+  smtp:
+    container_name: ${COMPOSE_PROJECT_NAME}_smtp
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - ${COMPOSE_SMTP_SERVER_PORT}
+      - ${COMPOSE_SMTP_CLIENT_PORT}
+  node:
+    container_name: ${COMPOSE_PROJECT_NAME}_node
+    image : node:20
+    volumes:
+      - "./:/app"
+    working_dir: /app
+    entrypoint: ["/bin/bash", "./docker-node.sh"]
+    environment:
+      - VITE_CLIENT_PORT=${COMPOSE_VITE_CLIENT_PORT:-}
+      - VITE_MODE=${COMPOSE_VITE_MODE:-}
+    # map default vite port to port exposed by container
+    # (same port is used in vite.config.js)
+    ports:
+      - ${COMPOSE_VITE_CLIENT_PORT}:5173
